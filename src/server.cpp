@@ -181,7 +181,11 @@ int main(int argc, char** argv)
             {
                 header = "Content-Type: text/plain\r\nContent-Length: ";
             }
-            if (has_echo) header += std::to_string(endpoint2.length());
+            if (has_echo)
+            {
+                response_body = endpoint2;
+                header += std::to_string(response_body.length());
+            }
             if (has_user_agent)
             {
                 std::string request_header = get_header(str);
@@ -193,7 +197,7 @@ int main(int argc, char** argv)
         }
         std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
             status_code_to_string(status)) + "\r\n" + header + "\r\n";
-        response += endpoint2;
+        response += response_body;
         send(client_fd, response.c_str(), response.length(), 0);
         std::cout << "Client connected\n";
         close(client_fd);
