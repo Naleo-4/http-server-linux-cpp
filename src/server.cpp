@@ -64,6 +64,7 @@ STATUS_CODE check_request_target(const std::string& str)
 std::string get_end_point(const std::string& str)
 {
     int cur = str.find_first_of('/');
+    if (cur == str.npos) return str;
     std::string temp{str.substr(cur + 1)};
     int cur2 = temp.find_first_of(' ');
     std::string end_point{temp.substr(0, cur2)};
@@ -135,10 +136,21 @@ int main(int argc, char** argv)
 
         // std::string data{check_request(str,rBuff)};
         // std::cout << data;
-        // STATUS_CODE status{check_request_target(str)};
-        // std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
-        //     status_code_to_string(status)) + "\r\n\r\n";
-        std::string message{};
+        STATUS_CODE status{check_request_target(str)};
+
+        std::string endpoint{get_end_point(str)};
+        std::string header{};
+        if (endpoint.empty() || endpoint.contains("echo"))
+        {
+            status = OK;
+            std::string endpoint2{get_end_point(endpoint)};
+            if(!endpoint.empty()){
+                header = "Content-Type: text/plain\r\nContent-Length: "
+                   + std::to_string(endpoint2.length()) + "\r\n";
+            }
+        }
+        std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
+            status_code_to_string(status)) + "\r\n" + header + "\r\n";
         send(client_fd, message.c_str(), message.length(), 0);
         std::cout << "Client connected\n";
         close(client_fd);

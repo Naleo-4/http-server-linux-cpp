@@ -1,1 +1,1 @@
-curl -v http://localhost:4221/asdbrbt
+curl -v http://localhost:4221/
