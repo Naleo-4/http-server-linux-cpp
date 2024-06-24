@@ -120,7 +120,7 @@ int main(int argc, char** argv)
         // std::string data{check_request(str,rBuff)};
         // std::cout << data;
         STATUS_CODE status{check_request_target(str)};
-        std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + status_code_to_string(status) + "\r\n\r\n";
+        std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(status_code_to_string(status)) + "\r\n\r\n";
         send(client_fd, message.c_str(), message.length(), 0);
         std::cout << "Client connected\n";
         close(client_fd);

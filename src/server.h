@@ -151,4 +151,24 @@ constexpr std::string status_code_to_string(const STATUS_CODE code) {
     }
 }
 
+inline std::string format_status_string(const std::string& str) {
+    std::string result;
+    bool capitalize_next = true;
+
+    for (char ch : str) {
+        if (ch == '_') {
+            result += ' ';
+            capitalize_next = true;
+        } else {
+            if (capitalize_next) {
+                result += std::toupper(ch);
+                capitalize_next = false;
+            } else {
+                result += std::tolower(ch);
+            }
+        }
+    }
+
+    return result;
+}
 #endif //SERVER_H
