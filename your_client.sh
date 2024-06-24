@@ -1,1 +1,1 @@
-curl -v http://localhost:4221/
+curl -v http://localhost:4221/echo/pineapple
