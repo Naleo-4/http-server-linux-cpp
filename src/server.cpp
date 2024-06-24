@@ -8,6 +8,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+
+
 int main(int argc, char **argv) {
   // Flush after every std::cout / std::cerr
   std::cout << std::unitbuf;
@@ -32,10 +34,11 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  sockaddr_in server_addr{};
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_addr.s_addr = INADDR_ANY;
-  server_addr.sin_port = htons(4221);
+  sockaddr_in server_addr = {
+  .sin_family = AF_INET,
+  .sin_addr.s_addr = INADDR_ANY,
+  .sin_port = htons(4221)};
+
   if (bind(server_fd, (sockaddr *) &server_addr, sizeof(server_addr)) != 0) {
     std::cerr << "Failed to bind to port 4221\n";
     return 1;
@@ -52,7 +55,14 @@ int main(int argc, char **argv) {
 
   std::cout << "Waiting for a client to connect...\n";
 
-  accept(server_fd, (sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+  int client = accept(server_fd, (sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+
+  constexpr ssize_t BUFF_LENGTH = 2048;
+  ssize_t buff[BUFF_LENGTH];
+  ssize_t read = recv(client, buff, BUFF_LENGTH,0);
+
+  std::string message = "HTTP/1.1 200 OK \r\n\r\n";
+  send(client,message.c_str(), message.length(),0);
   std::cout << "Client connected\n";
 
   close(server_fd);
