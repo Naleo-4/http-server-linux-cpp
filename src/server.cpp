@@ -140,10 +140,10 @@ int main(int argc, char** argv)
 
         std::string endpoint{get_end_point(str)};
         std::string header{};
+        std::string endpoint2{get_end_point(endpoint)};
         if (endpoint.empty() || endpoint.contains("echo"))
         {
             status = OK;
-            std::string endpoint2{get_end_point(endpoint)};
             if(!endpoint.empty()){
                 header = "Content-Type: text/plain\r\nContent-Length: "
                    + std::to_string(endpoint2.length()) + "\r\n";
@@ -151,6 +151,7 @@ int main(int argc, char** argv)
         }
         std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
             status_code_to_string(status)) + "\r\n" + header + "\r\n";
+        message += endpoint2;
         send(client_fd, message.c_str(), message.length(), 0);
         std::cout << "Client connected\n";
         close(client_fd);
