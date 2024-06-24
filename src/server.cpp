@@ -32,10 +32,15 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  sockaddr_in server_addr{
-  .sin_family = AF_INET,
-  .sin_addr.s_addr = INADDR_ANY,
-  .sin_port = htons(4221)};
+  sockaddr_in server_addr;
+  server_addr.sin_family = AF_INET;
+
+  server_addr.sin_addr.s_addr = INADDR_ANY;
+  server_addr.sin_port = htons(4221);
+  // sockaddr_in server_addr{
+  // .sin_family = AF_INET,
+  // .sin_addr.s_addr = INADDR_ANY,
+  // .sin_port = htons(4221)};
 
   if (bind(server_fd, (sockaddr *) &server_addr, sizeof(server_addr)) != 0) {
     std::cerr << "Failed to bind to port 4221\n";
