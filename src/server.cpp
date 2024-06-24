@@ -54,14 +54,20 @@ int main(int argc, char **argv) {
 
   std::cout << "Waiting for a client to connect...\n";
 
-  int client = accept(server_fd, (sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+  int client_fd = accept(server_fd, (sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
 
   constexpr ssize_t BUFF_LENGTH = 2048;
-  ssize_t buff[BUFF_LENGTH];
-  ssize_t read = recv(client, buff, BUFF_LENGTH,0);
-
+  char buff[];
+  ssize_t rBuff = recv(client_fd, buff, BUFF_LENGTH,0);
+  if (rBuff < 0)
+  {
+    std::cerr << "error recceving message from client\n";
+    close(client_fd);
+  }
+  std::string str(buff);
+  std::cout << buff;
   std::string message = "HTTP/1.1 200 OK\r\n\r\n";
-  send(client,message.c_str(), message.length(),0);
+  send(client_fd,message.c_str(), message.length(),0);
   std::cout << "Client connected\n";
 
   close(server_fd);
