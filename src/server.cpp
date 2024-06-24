@@ -16,7 +16,7 @@ std::string get_line(const std::string& str, int& cur)
     {
         temp_str += str[cur++];
     }
-    cur+=2;
+    cur += 2;
     return temp_str;
 }
 
@@ -50,9 +50,24 @@ std::string get_line(const std::string& str, int& cur)
 STATUS_CODE check_request_target(const std::string& str)
 {
     int cur = str.find_first_of('/');
-    if (str[cur+1] != ' ')
-        return  NOT_FOUND;
+    if (str[cur + 1] != ' ')
+    {
+        std::string temp{str.substr(cur + 1)};
+        int cur2 = temp.find_first_of(' ');
+        std::string end_point{temp.substr(0, cur2)};
+        std::cout << end_point;
+        return NOT_FOUND;
+    }
     return OK;
+}
+
+std::string get_end_point(const std::string& str)
+{
+    int cur = str.find_first_of('/');
+    std::string temp{str.substr(cur + 1)};
+    int cur2 = temp.find_first_of(' ');
+    std::string end_point{temp.substr(0, cur2)};
+    return end_point;
 }
 
 int main(int argc, char** argv)
@@ -103,6 +118,7 @@ int main(int argc, char** argv)
     int client_addr_len = sizeof(client_addr);
 
     std::cout << "Waiting for a client to connect...\n";
+
     while (true)
     {
         int client_fd = accept(server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
@@ -119,8 +135,10 @@ int main(int argc, char** argv)
 
         // std::string data{check_request(str,rBuff)};
         // std::cout << data;
-        STATUS_CODE status{check_request_target(str)};
-        std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(status_code_to_string(status)) + "\r\n\r\n";
+        // STATUS_CODE status{check_request_target(str)};
+        // std::string message = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
+        //     status_code_to_string(status)) + "\r\n\r\n";
+        std::string message{};
         send(client_fd, message.c_str(), message.length(), 0);
         std::cout << "Client connected\n";
         close(client_fd);
