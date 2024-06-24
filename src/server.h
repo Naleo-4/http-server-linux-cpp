@@ -168,7 +168,9 @@ inline std::string format_status_string(const std::string& str) {
             }
         }
     }
-
+    if (result == "Ok") {
+        return "OK";
+    }
     return result;
 }
 #endif //SERVER_H
