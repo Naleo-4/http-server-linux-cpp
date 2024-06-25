@@ -10,6 +10,10 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 add_executable(server ${SOURCE_FILES}
-        src/server.h)
+        src/server.h
+        src/http_server.cpp
+        src/http_server.h
+        src/http_client.cpp
+        src/http_client.h)
 
 target_link_libraries(server PRIVATE Threads::Threads)

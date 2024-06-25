@@ -1,4 +1,6 @@
 #include "server.h"
+#include "http_server.h"
+#include "http_client.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -64,7 +66,7 @@ STATUS_CODE check_request_target(const std::string& str)
 std::string get_end_point(const std::string& str)
 {
     int cur = str.find_first_of('/');
-    if (cur == str.npos) return str;
+    if (cur == std::string::npos) return str;
     std::string temp{str.substr(cur + 1)};
     int cur2 = temp.find_first_of(' ');
     std::string end_point{temp.substr(0, cur2)};
@@ -74,7 +76,7 @@ std::string get_end_point(const std::string& str)
 std::string get_header(const std::string& str)
 {
     int cur = str.find_first_of("\r\n");
-    if (cur == str.npos) return str;
+    if (cur == std::string::npos) return str;
     std::string temp{str.substr(cur + 2)};
     int cur2 = temp.find_last_of("\r\n");
     std::string header{temp.substr(0, cur2)};
@@ -84,7 +86,7 @@ std::string get_header(const std::string& str)
 auto get_line_with_key(const std::string& str, const std::string& key) -> std::string
 {
     int cur = str.find_first_of("\r\n");
-    if (cur == str.npos) return "";
+    if (cur == std::string::npos) return "";
     std::string sub1{str.substr(0, cur)};
     if (sub1.contains(key)) return sub1;
     std::string temp{str.substr(cur + 2)};
@@ -94,7 +96,7 @@ auto get_line_with_key(const std::string& str, const std::string& key) -> std::s
 std::string get_line_value(const std::string& str)
 {
     int cur = str.find_first_of(':');
-    if (cur == str.npos) return "";
+    if (cur == std::string::npos) return "";
     std::string temp{str.substr(cur + 2)};
     int cur2 = temp.find_first_of("\r\n");
     std::string value{temp.substr(0, cur2)};
@@ -103,64 +105,55 @@ std::string get_line_value(const std::string& str)
 
 int main(int argc, char** argv)
 {
-    // Flush after every std::cout / std::cerr
-    std::cout << std::unitbuf;
-    std::cerr << std::unitbuf;
-
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    // std::cout << "Logs from your program will appear here!\n";
-
-    // Uncomment this block to pass the first stage
-
-    const int server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd < 0)
-    {
-        std::cerr << "Failed to create server socket\n";
-        return 1;
-    }
-
-    // Since the tester restarts your program quite often, setting SO_REUSEADDR
-    // ensures that we don't run into 'Address already in use' errors
-    constexpr int reuse = 1;
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
-    {
-        std::cerr << "setsockopt failed\n";
-        return 1;
-    }
-
-    sockaddr_in server_addr{};
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(4221);
-    if (bind(server_fd, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
-    {
-        std::cerr << "Failed to bind to port 4221\n";
-        return 1;
-    }
-
-    constexpr int connection_backlog = 5;
-    if (listen(server_fd, connection_backlog) != 0)
-    {
-        std::cerr << "listen failed\n";
-        return 1;
-    }
-
-    sockaddr_in client_addr{};
-    int client_addr_len = sizeof(client_addr);
+    // std::cout << std::unitbuf;
+    // std::cerr << std::unitbuf;
+    //
+    // const int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    // if (server_fd < 0)
+    // {
+    //     std::cerr << "Failed to create server socket\n";
+    //     return 1;
+    // }
+    //
+    // // Since the tester restarts your program quite often, setting SO_REUSEADDR
+    // // ensures that we don't run into 'Address already in use' errors
+    // constexpr int reuse = 1;
+    // if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    // {
+    //     std::cerr << "setsockopt failed\n";
+    //     return 1;
+    // }
+    //
+    // sockaddr_in server_addr{};
+    // server_addr.sin_family = AF_INET;
+    // server_addr.sin_addr.s_addr = INADDR_ANY;
+    // server_addr.sin_port = htons(4221);
+    // if (bind(server_fd, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
+    // {
+    //     std::cerr << "Failed to bind to port 4221\n";
+    //     return 1;
+    // }
+    //
+    // constexpr int connection_backlog = 5;
+    // if (listen(server_fd, connection_backlog) != 0)
+    // {
+    //     std::cerr << "listen failed\n";
+    //     return 1;
+    // }
+    const Http_server* server = Http_server::get_instance();
 
     std::cout << "Waiting for a client to connect...\n";
 
     while (true)
     {
-        int client_fd = accept(server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
-
+        Http_client client {Http_client(server)};
         constexpr ssize_t BUFF_LENGTH = 2048;
         char buff[BUFF_LENGTH]{};
-        ssize_t rBuff = recv(client_fd, buff, BUFF_LENGTH, 0);
+        ssize_t rBuff = recv(client.client_fd, buff, BUFF_LENGTH, 0);
         if (rBuff < 0)
         {
             std::cerr << "error recceving message from client\n";
-            close(client_fd);
+            close(client.client_fd);
         }
         std::string str(buff, rBuff);
 
@@ -198,13 +191,13 @@ int main(int argc, char** argv)
         std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
             status_code_to_string(status)) + "\r\n" + header + "\r\n";
         response += response_body;
-        send(client_fd, response.c_str(), response.length(), 0);
+        send(client.client_fd, response.c_str(), response.length(), 0);
         std::cout << "Client connected\n";
-        close(client_fd);
+        close(client.client_fd);
         std::cout << "Client closed\n";
     }
 
-    close(server_fd);
+    close(server->server_fd);
 
     return 0;
 }
