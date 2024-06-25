@@ -1,6 +1,5 @@
 #include "server.h"
 #include "http_server.h"
-#include "http_client.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -11,16 +10,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-std::string get_line(const std::string& str, int& cur)
-{
-    std::string temp_str;
-    while (str[cur] != '\r')
-    {
-        temp_str += str[cur++];
-    }
-    cur += 2;
-    return temp_str;
-}
+#include "http_client.h"
 
 // std::string check_request(const std::string& str, ssize_t length)
 // {
@@ -49,59 +39,6 @@ std::string get_line(const std::string& str, int& cur)
 //     // data.pop_back();
 //     // return data;
 // }
-STATUS_CODE check_request_target(const std::string& str)
-{
-    int cur = str.find_first_of('/');
-    if (str[cur + 1] != ' ')
-    {
-        std::string temp{str.substr(cur + 1)};
-        int cur2 = temp.find_first_of(' ');
-        std::string end_point{temp.substr(0, cur2)};
-        // std::cout << end_point << "\n";
-        return NOT_FOUND;
-    }
-    return OK;
-}
-
-std::string get_end_point(const std::string& str)
-{
-    int cur = str.find_first_of('/');
-    if (cur == std::string::npos) return str;
-    std::string temp{str.substr(cur + 1)};
-    int cur2 = temp.find_first_of(' ');
-    std::string end_point{temp.substr(0, cur2)};
-    return end_point;
-}
-
-std::string get_header(const std::string& str)
-{
-    int cur = str.find_first_of("\r\n");
-    if (cur == std::string::npos) return str;
-    std::string temp{str.substr(cur + 2)};
-    int cur2 = temp.find_last_of("\r\n");
-    std::string header{temp.substr(0, cur2)};
-    return header;
-}
-
-auto get_line_with_key(const std::string& str, const std::string& key) -> std::string
-{
-    int cur = str.find_first_of("\r\n");
-    if (cur == std::string::npos) return "";
-    std::string sub1{str.substr(0, cur)};
-    if (sub1.contains(key)) return sub1;
-    std::string temp{str.substr(cur + 2)};
-    return get_line_with_key(temp, key);
-}
-
-std::string get_line_value(const std::string& str)
-{
-    int cur = str.find_first_of(':');
-    if (cur == std::string::npos) return "";
-    std::string temp{str.substr(cur + 2)};
-    int cur2 = temp.find_first_of("\r\n");
-    std::string value{temp.substr(0, cur2)};
-    return value;
-}
 
 int main(int argc, char** argv)
 {
@@ -140,61 +77,60 @@ int main(int argc, char** argv)
     //     std::cerr << "listen failed\n";
     //     return 1;
     // }
+
     const Http_server* server = Http_server::get_instance();
 
-    std::cout << "Waiting for a client to connect...\n";
-
+    Http_server::accept_connection();
     while (true)
     {
-        Http_client client {Http_client(server)};
-        constexpr ssize_t BUFF_LENGTH = 2048;
-        char buff[BUFF_LENGTH]{};
-        ssize_t rBuff = recv(client.client_fd, buff, BUFF_LENGTH, 0);
-        if (rBuff < 0)
-        {
-            std::cerr << "error recceving message from client\n";
-            close(client.client_fd);
-        }
-        std::string str(buff, rBuff);
-
-        // std::string data{check_request(str,rBuff)};
-        // std::cout << data;
-        STATUS_CODE status{check_request_target(str)};
-
-        std::string endpoint{get_end_point(str)};
-        std::string header{};
-        std::string endpoint2{get_end_point(endpoint)};
-        std::string response_body{};
-        bool has_echo = endpoint.contains("echo");
-        bool has_user_agent = endpoint.contains("user-agent");
-        if (endpoint.empty() || has_echo || has_user_agent)
-        {
-            status = OK;
-            if (!endpoint.empty())
-            {
-                header = "Content-Type: text/plain\r\nContent-Length: ";
-            }
-            if (has_echo)
-            {
-                response_body = endpoint2;
-                header += std::to_string(response_body.length());
-            }
-            if (has_user_agent)
-            {
-                std::string request_header = get_header(str);
-                std::string line = get_line_with_key(request_header,"User-Agent");
-                response_body = get_line_value(line);
-                header += std::to_string(response_body.length());
-            }
-            header += "\r\n";
-        }
-        std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
-            status_code_to_string(status)) + "\r\n" + header + "\r\n";
-        response += response_body;
-        send(client.client_fd, response.c_str(), response.length(), 0);
-        std::cout << "Client connected\n";
-        close(client.client_fd);
-        std::cout << "Client closed\n";
+        Http_server::accept_connection();
+        // int client_fd = accept(server->server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
+        // constexpr ssize_t BUFF_LENGTH = 2048;
+        // char buff[BUFF_LENGTH]{};
+        // ssize_t rBuff = recv(client_fd, buff, BUFF_LENGTH, 0);
+        // if (rBuff < 0)
+        // {
+        //     std::cerr << "error recceving message from client\n";
+        //     close(client_fd);
+        // }
+        // std::string str(buff, rBuff);
+        //
+        // STATUS_CODE status{check_request_target(str)};
+        //
+        // std::string endpoint{get_end_point(str)};
+        // std::string header{};
+        // std::string endpoint2{get_end_point(endpoint)};
+        // std::string response_body{};
+        // bool has_echo = endpoint.contains("echo");
+        // bool has_user_agent = endpoint.contains("user-agent");
+        // if (endpoint.empty() || has_echo || has_user_agent)
+        // {
+        //     status = OK;
+        //     if (!endpoint.empty())
+        //     {
+        //         header = "Content-Type: text/plain\r\nContent-Length: ";
+        //     }
+        //     if (has_echo)
+        //     {
+        //         response_body = endpoint2;
+        //         header += std::to_string(response_body.length());
+        //     }
+        //     if (has_user_agent)
+        //     {
+        //         std::string request_header = get_header(str);
+        //         std::string line = get_line_with_key(request_header,"User-Agent");
+        //         response_body = get_line_value(line);
+        //         header += std::to_string(response_body.length());
+        //     }
+        //     header += "\r\n";
+        // }
+        // std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
+        //     status_code_to_string(status)) + "\r\n" + header + "\r\n";
+        // response += response_body;
+        // send(client_fd, response.c_str(), response.length(), 0);
+        // std::cout << "Client connected\n";
+        // close(client_fd);
+        // std::cout << "Client closed\n";
     }
 
     close(server->server_fd);

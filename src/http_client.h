@@ -10,16 +10,22 @@
 class Http_client
 {
 public:
-    const sockaddr_in client_addr{};
+    sockaddr_in client_addr{
+        .sin_family = AF_INET,
+        .sin_port = htons(4221),
+        .sin_addr = {.s_addr = INADDR_ANY},
+        .sin_zero = {0}
+    }; // Adjust this as necessary for the server's IP};
     const int client_fd;
     int client_addr_len = sizeof(client_addr);
+    constexpr static ssize_t BUFF_LENGTH = 2048;
 
 public:
-    explicit Http_client(const Http_server* server):
-    client_fd(accept(server->server_fd, (sockaddr*)&client_addr,(socklen_t*)&client_addr_len))
-    {
-
-    }
+    explicit Http_client(const Http_server* server);
+    Http_client();
+    void connect_to_server() const;
+    void send_message(const std::string& message) const;
+    void receive_message() const;
 };
 
 

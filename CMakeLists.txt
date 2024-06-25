@@ -14,6 +14,8 @@ add_executable(server ${SOURCE_FILES}
         src/http_server.cpp
         src/http_server.h
         src/http_client.cpp
-        src/http_client.h)
+        src/http_client.h
+        src/thread_pool.cpp
+        src/thread_pool.h)
 
 target_link_libraries(server PRIVATE Threads::Threads)
