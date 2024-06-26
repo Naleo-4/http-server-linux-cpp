@@ -4,7 +4,7 @@
 #include "http_server.h"
 #include "http_client.h"
 #include "server.h"
-
+#include <iostream>
 const Http_server* Http_server::instance = nullptr;
 Thread_pool Http_server::thread_pool(4);
 
@@ -51,6 +51,14 @@ std::string get_header(const std::string& str)
     int cur2 = temp.find_last_of("\r\n");
     std::string header{temp.substr(0, cur2)};
     return header;
+}
+
+std::string get_method(const std::string& str)
+{
+    int cur = str.find_first_of(' ');
+    if (cur == std::string::npos) return "";
+    std::string method{str.substr(0, cur)};
+    return method;
 }
 
 auto get_line_with_key(const std::string& str, const std::string& key) -> std::string
@@ -122,30 +130,27 @@ const Http_server* Http_server::get_instance()
 
 void Http_server::accept_connection()
 {
-    sockaddr_in client_addr{
-        .sin_family = AF_INET,
-        .sin_port = htons(4221),
-        .sin_addr = {.s_addr = INADDR_ANY},
-        .sin_zero = {0}
-    };
-    int client_addr_len = sizeof(client_addr);
-    while (true)
+    // sockaddr_in client_addr{
+    //     .sin_family = AF_INET,
+    //     .sin_port = htons(4221),
+    //     .sin_addr = {.s_addr = INADDR_ANY},
+    //     .sin_zero = {0}
+    // };
+    // int client_addr_len = sizeof(client_addr);
+
+    int client_fd = accept(get_instance()->server_fd, nullptr, nullptr);
+    if (client_fd < 0)
     {
-        int client_socket = accept(get_instance()->server_fd, nullptr, nullptr);
-        if (client_socket < 0)
-        {
-            std::cerr << "Failed to accept client connection\n";
-            continue;
-        }
-        thread_pool.enqueue([client_socket] { handle_client(client_socket); });
+        std::cerr << "Failed to accept client connection\n";
+        return;
     }
+    thread_pool.enqueue([client_fd] { handle_client(client_fd); });
 };
 
 void Http_server::handle_client(int client_fd)
 {
     char buff[Http_client::BUFF_LENGTH]{};
     char buffer[2048];
-    // ssize_t bytesRead = read(client_fd, buffer, sizeof(buffer) - 1);
     ssize_t bytesRead = recv(client_fd, buff, Http_client::BUFF_LENGTH, 0);
     if (bytesRead < 0)
     {
@@ -154,9 +159,10 @@ void Http_server::handle_client(int client_fd)
     }
     if (bytesRead > 0)
     {
-        std::string str(buff, bytesRead);
-        STATUS_CODE status{check_request_target(str)};
-        std::string endpoint{get_end_point(str)};
+        std::string request(buff, bytesRead);
+        STATUS_CODE status{check_request_target(request)};
+        std::string method{get_method(request)};
+        std::string endpoint{get_end_point(request)};
         std::string header{};
         std::string endpoint2{get_end_point(endpoint)};
         std::string response_body{};
@@ -176,7 +182,7 @@ void Http_server::handle_client(int client_fd)
             }
             if (has_user_agent)
             {
-                std::string request_header = get_header(str);
+                std::string request_header = get_header(request);
                 std::string line = get_line_with_key(request_header, "User-Agent");
                 response_body = get_line_value(line);
                 header += std::to_string(response_body.length());

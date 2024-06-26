@@ -1,16 +1,8 @@
 #include "server.h"
 #include "http_server.h"
 #include <iostream>
-#include <cstdlib>
-#include <string>
-#include <cstring>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-
-#include "http_client.h"
+#include <pthread.h>
+// #include <thread>
 
 // std::string check_request(const std::string& str, ssize_t length)
 // {
@@ -42,6 +34,7 @@
 
 int main(int argc, char** argv)
 {
+    pthread_t t;
     // std::cout << std::unitbuf;
     // std::cerr << std::unitbuf;
     //
@@ -80,10 +73,12 @@ int main(int argc, char** argv)
 
     const Http_server* server = Http_server::get_instance();
 
-    Http_server::accept_connection();
+    std::cout << "Waiting for a client to connect...\n";
+    // Http_server::accept_connection();
     while (true)
     {
         Http_server::accept_connection();
+
         // int client_fd = accept(server->server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
         // constexpr ssize_t BUFF_LENGTH = 2048;
         // char buff[BUFF_LENGTH]{};

@@ -13,11 +13,11 @@
 
 class Thread_pool {
 public:
-    Thread_pool(size_t numth);
+    explicit Thread_pool(size_t numth);
     ~Thread_pool();
     void enqueue(std::function<void()> task);
 private:
-    std::vector<std::thread> workers;
+    std::vector<std::jthread> workers;
     std::queue<std::function<void()>> tasks;
 
     std::mutex queue_mutex;

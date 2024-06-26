@@ -3,6 +3,7 @@
 //
 
 #include "http_client.h"
+#include <iostream>
 
 Http_client::Http_client(const Http_server* server):
     client_fd(accept(server->server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len))

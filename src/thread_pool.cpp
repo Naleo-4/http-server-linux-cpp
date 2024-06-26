@@ -15,7 +15,7 @@ Thread_pool::~Thread_pool() {
         stop = true;
     }
     condition.notify_all();
-    for (std::thread &worker : workers) {
+    for (std::jthread &worker : workers) {
         worker.join();
     }
 }

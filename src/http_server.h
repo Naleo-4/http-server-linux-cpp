@@ -5,21 +5,9 @@
 #ifndef HTTP_SERVER_H
 #define HTTP_SERVER_H
 #include "thread_pool.h"
-#include <condition_variable>
-#include <functional>
-#include <iostream>
-#include <mutex>
-#include <queue>
-#include <thread>
-#include <iostream>
-#include <cstdlib>
-#include <string>
-#include <cstring>
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+#include <netinet/in.h>
+
 
 // class ThreadPool
 // {
