@@ -15,7 +15,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "http-server-starter-cpp",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "example_chat::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-example_chat-Debug-e71aff90653f03d5832a.json",
+					"jsonFile" : "target-example_chat-Debug-868b09114b8919a7980d.json",
 					"name" : "example_chat",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-server-Debug-c7f2966a5e472056fffa.json",
+					"name" : "server",
 					"projectIndex" : 0
 				}
 			]

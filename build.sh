@@ -7,6 +7,8 @@
 # DON'T EDIT THIS!
 set -e
 # vcpkg & cmake are required.
-cmake -B build -S . -G Ninja -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}"/scripts/buildsystems/vcpkg.cmake
+cmake -B build -S . -G Ninja .
+#-DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}"/scripts/buildsystems/vcpkg.cmake
 cmake --build ./build
 #exec ./build/server "$@"
+#exec ./build/example_chat "$@"
