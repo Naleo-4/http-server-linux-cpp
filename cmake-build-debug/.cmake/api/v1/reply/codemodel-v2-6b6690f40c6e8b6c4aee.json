@@ -38,9 +38,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "server::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-server-Debug-18414ec7c79c95225b09.json",
-					"name" : "server",
+					"id" : "example_chat::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-example_chat-Debug-e71aff90653f03d5832a.json",
+					"name" : "example_chat",
 					"projectIndex" : 0
 				}
 			]
