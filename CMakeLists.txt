@@ -16,11 +16,11 @@ link_directories(${CMAKE_SOURCE_DIR}/include/lib)
 #find_library(GameNetworkingSockets NAMES GameNetworkingSockets PATHS ${CMAKE_SOURCE_DIR}/include/lib)
 
 
-add_executable(example_chat
-#                ${SOURCE_FILES}
-        src/steam/example_chat.cpp
-)
-target_link_libraries(example_chat GameNetworkingSockets)
+#add_executable(example_chat
+##                ${SOURCE_FILES}
+#        src/steam/example_chat.cpp
+#)
+#target_link_libraries(example_chat GameNetworkingSockets)
 
 add_executable(server
 #        ${SOURCE_FILES}

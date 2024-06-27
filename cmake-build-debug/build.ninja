@@ -41,40 +41,6 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /home/kali/dev/repos/git/codecrafters-http-server-cpp/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target example_chat
-
-
-#############################################
-# Order-only phony target for example_chat
-
-build cmake_object_order_depends_target_example_chat: phony || CMakeFiles/example_chat.dir
-
-build CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o: CXX_COMPILER__example_chat_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/steam/example_chat.cpp || cmake_object_order_depends_target_example_chat
-  DEP_FILE = CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o.d
-  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
-  INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
-  OBJECT_DIR = CMakeFiles/example_chat.dir
-  OBJECT_FILE_DIR = CMakeFiles/example_chat.dir/src/steam
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target example_chat
-
-
-#############################################
-# Link the executable example_chat
-
-build example_chat: CXX_EXECUTABLE_LINKER__example_chat_Debug CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o
-  FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib  -lGameNetworkingSockets
-  LINK_PATH = -L/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib
-  OBJECT_DIR = CMakeFiles/example_chat.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = example_chat
-  TARGET_PDB = example_chat.dbg
-
-# =============================================================================
 # Object build statements for EXECUTABLE target server
 
 
@@ -162,7 +128,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/kali/dev/repos/git/codecrafters-http-server-cpp/cmake-build-debug
 
-build all: phony example_chat server
+build all: phony server
 
 # =============================================================================
 # Built-in targets
