@@ -49,12 +49,12 @@ cmake_ninja_workdir = /home/kali/dev/repos/git/codecrafters-http-server-cpp/cmak
 
 build cmake_object_order_depends_target_example_chat: phony || CMakeFiles/example_chat.dir
 
-build CMakeFiles/example_chat.dir/src/example_chat.cpp.o: CXX_COMPILER__example_chat_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/example_chat.cpp || cmake_object_order_depends_target_example_chat
-  DEP_FILE = CMakeFiles/example_chat.dir/src/example_chat.cpp.o.d
+build CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o: CXX_COMPILER__example_chat_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/steam/example_chat.cpp || cmake_object_order_depends_target_example_chat
+  DEP_FILE = CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o.d
   FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
   INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
   OBJECT_DIR = CMakeFiles/example_chat.dir
-  OBJECT_FILE_DIR = CMakeFiles/example_chat.dir/src
+  OBJECT_FILE_DIR = CMakeFiles/example_chat.dir/src/steam
 
 
 # =============================================================================
@@ -64,7 +64,7 @@ build CMakeFiles/example_chat.dir/src/example_chat.cpp.o: CXX_COMPILER__example_
 #############################################
 # Link the executable example_chat
 
-build example_chat: CXX_EXECUTABLE_LINKER__example_chat_Debug CMakeFiles/example_chat.dir/src/example_chat.cpp.o
+build example_chat: CXX_EXECUTABLE_LINKER__example_chat_Debug CMakeFiles/example_chat.dir/src/steam/example_chat.cpp.o
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib  -lGameNetworkingSockets
   LINK_PATH = -L/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib
@@ -83,33 +83,33 @@ build example_chat: CXX_EXECUTABLE_LINKER__example_chat_Debug CMakeFiles/example
 
 build cmake_object_order_depends_target_server: phony || CMakeFiles/server.dir
 
-build CMakeFiles/server.dir/src/server.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/server.cpp || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/src/server.cpp.o.d
+build CMakeFiles/server.dir/src/myServer/server.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/server.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/server.cpp.o.d
   FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
   INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
   OBJECT_DIR = CMakeFiles/server.dir
-  OBJECT_FILE_DIR = CMakeFiles/server.dir/src
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
 
-build CMakeFiles/server.dir/src/http_server.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/http_server.cpp || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/src/http_server.cpp.o.d
+build CMakeFiles/server.dir/src/myServer/http_server.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/http_server.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/http_server.cpp.o.d
   FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
   INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
   OBJECT_DIR = CMakeFiles/server.dir
-  OBJECT_FILE_DIR = CMakeFiles/server.dir/src
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
 
-build CMakeFiles/server.dir/src/http_client.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/http_client.cpp || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/src/http_client.cpp.o.d
+build CMakeFiles/server.dir/src/myServer/http_client.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/http_client.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/http_client.cpp.o.d
   FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
   INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
   OBJECT_DIR = CMakeFiles/server.dir
-  OBJECT_FILE_DIR = CMakeFiles/server.dir/src
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
 
-build CMakeFiles/server.dir/src/thread_pool.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/thread_pool.cpp || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/src/thread_pool.cpp.o.d
+build CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/thread_pool.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o.d
   FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
   INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
   OBJECT_DIR = CMakeFiles/server.dir
-  OBJECT_FILE_DIR = CMakeFiles/server.dir/src
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
 
 
 # =============================================================================
@@ -119,7 +119,7 @@ build CMakeFiles/server.dir/src/thread_pool.cpp.o: CXX_COMPILER__server_unscanne
 #############################################
 # Link the executable server
 
-build server: CXX_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/src/server.cpp.o CMakeFiles/server.dir/src/http_server.cpp.o CMakeFiles/server.dir/src/http_client.cpp.o CMakeFiles/server.dir/src/thread_pool.cpp.o
+build server: CXX_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/src/myServer/server.cpp.o CMakeFiles/server.dir/src/myServer/http_server.cpp.o CMakeFiles/server.dir/src/myServer/http_client.cpp.o CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o
   FLAGS = -g
   LINK_PATH = -L/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib
   OBJECT_DIR = CMakeFiles/server.dir

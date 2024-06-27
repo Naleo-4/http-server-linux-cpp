@@ -18,19 +18,19 @@ link_directories(${CMAKE_SOURCE_DIR}/include/lib)
 
 add_executable(example_chat
 #                ${SOURCE_FILES}
-        src/example_chat.cpp
+        src/steam/example_chat.cpp
 )
 target_link_libraries(example_chat GameNetworkingSockets)
 
 add_executable(server
 #        ${SOURCE_FILES}
-        src/server.h
-        src/server.cpp
-        src/http_server.cpp
-        src/http_server.h
-        src/http_client.cpp
-        src/http_client.h
-        src/thread_pool.cpp
-        src/thread_pool.h
+        src/myServer/server.h
+        src/myServer/server.cpp
+        src/myServer/http_server.cpp
+        src/myServer/http_server.h
+        src/myServer/http_client.cpp
+        src/myServer/http_client.h
+        src/myServer/thread_pool.cpp
+        src/myServer/thread_pool.h
 )
 #target_link_libraries(server PRIVATE Threads::Threads)

@@ -119,14 +119,13 @@ public:
     const int connection_backlog = 5;
     const sockaddr_in server_addr;
     static Thread_pool thread_pool;
-
+    static std::string path;
 private:
     Http_server();
 public:
     static void accept_connection();
     static void handle_client(int client_socket);
-
-public:
+    static void set_path(std::string& path);
     static const Http_server* get_instance();
 };
 

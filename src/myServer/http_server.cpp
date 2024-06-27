@@ -5,8 +5,11 @@
 #include "http_client.h"
 #include "server.h"
 #include <iostream>
+#include <fstream>
+#include <bits/fs_ops.h>
 const Http_server* Http_server::instance = nullptr;
 Thread_pool Http_server::thread_pool(4);
+std::string Http_server::path;
 
 std::string get_line(const std::string& str, int& cur)
 {
@@ -79,6 +82,18 @@ std::string get_line_value(const std::string& str)
     int cur2 = temp.find_first_of("\r\n");
     std::string value{temp.substr(0, cur2)};
     return value;
+}
+
+void get_file_content(std::string& str,const std::string& path)
+{
+    std::ifstream ifs{path};
+    str.assign( (std::istreambuf_iterator<char>(ifs) ),
+                (std::istreambuf_iterator<char>()    ) );
+}
+
+void Http_server::set_path(std::string& path)
+{
+    Http_server::path = path;
 }
 
 Http_server::Http_server(): server_fd(socket(AF_INET, SOCK_STREAM, 0)), server_addr({
@@ -166,14 +181,27 @@ void Http_server::handle_client(int client_fd)
         std::string header{};
         std::string endpoint2{get_end_point(endpoint)};
         std::string response_body{};
+        bool is_request_file = endpoint.contains("files");
         bool has_echo = endpoint.contains("echo");
         bool has_user_agent = endpoint.contains("user-agent");
-        if (endpoint.empty() || has_echo || has_user_agent)
+        if (endpoint.empty() || has_echo || has_user_agent || is_request_file)
         {
             status = OK;
             if (!endpoint.empty())
             {
                 header = "Content-Type: text/plain\r\nContent-Length: ";
+            }
+            if(is_request_file)
+            {
+                if (std::filesystem::exists(path +"/"+ endpoint2))
+                {
+                    get_file_content(response_body, path + "/"+ endpoint2);
+                    header = "Content-Type: application/octet-stream\r\nContent-Length: " + std::to_string(response_body.length());
+                }
+                else
+                {
+                    status = NOT_FOUND;
+                }
             }
             if (has_echo)
             {
@@ -189,10 +217,14 @@ void Http_server::handle_client(int client_fd)
             }
             header += "\r\n";
         }
+        if (status == NOT_FOUND)
+        {
+            header.clear();
+        }
         std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
             status_code_to_string(status)) + "\r\n" + header + "\r\n";
         response += response_body;
-        // std::cout << response;
+        std::cout << response;
         send(client_fd, response.c_str(), response.length(), 0);
     }
     close(client_fd);

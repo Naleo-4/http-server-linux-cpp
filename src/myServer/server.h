@@ -5,6 +5,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <filesystem>
 #include <string>
 enum STATUS_CODE
 {

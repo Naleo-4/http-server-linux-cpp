@@ -1,8 +1,8 @@
-#include "server.h"
-#include "http_server.h"
-#include <iostream>
-#include <pthread.h>
-// #include <thread>
+//
+// Created by kali on 6/26/24.
+//
+
+
 
 // std::string check_request(const std::string& str, ssize_t length)
 // {
@@ -32,52 +32,41 @@
 //     // return data;
 // }
 
-int main(int argc, char** argv)
-{
-    pthread_t t;
-    // std::cout << std::unitbuf;
-    // std::cerr << std::unitbuf;
-    //
-    // const int server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    // if (server_fd < 0)
-    // {
-    //     std::cerr << "Failed to create server socket\n";
-    //     return 1;
-    // }
-    //
-    // // Since the tester restarts your program quite often, setting SO_REUSEADDR
-    // // ensures that we don't run into 'Address already in use' errors
-    // constexpr int reuse = 1;
-    // if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
-    // {
-    //     std::cerr << "setsockopt failed\n";
-    //     return 1;
-    // }
-    //
-    // sockaddr_in server_addr{};
-    // server_addr.sin_family = AF_INET;
-    // server_addr.sin_addr.s_addr = INADDR_ANY;
-    // server_addr.sin_port = htons(4221);
-    // if (bind(server_fd, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
-    // {
-    //     std::cerr << "Failed to bind to port 4221\n";
-    //     return 1;
-    // }
-    //
-    // constexpr int connection_backlog = 5;
-    // if (listen(server_fd, connection_backlog) != 0)
-    // {
-    //     std::cerr << "listen failed\n";
-    //     return 1;
-    // }
-
-    const Http_server* server = Http_server::get_instance();
-
-    std::cout << "Waiting for a client to connect...\n";
-    // Http_server::accept_connection();
-    while (true)
-    {
-        Http_server::accept_connection();
+// std::cout << std::unitbuf;
+  // std::cerr << std::unitbuf;
+  //
+  // const int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+  // if (server_fd < 0)
+  // {
+  //     std::cerr << "Failed to create server socket\n";
+  //     return 1;
+  // }
+  //
+  // // Since the tester restarts your program quite often, setting SO_REUSEADDR
+  // // ensures that we don't run into 'Address already in use' errors
+  // constexpr int reuse = 1;
+  // if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+  // {
+  //     std::cerr << "setsockopt failed\n";
+  //     return 1;
+  // }
+  //
+  // sockaddr_in server_addr{};
+  // server_addr.sin_family = AF_INET;
+  // server_addr.sin_addr.s_addr = INADDR_ANY;
+  // server_addr.sin_port = htons(4221);
+  // if (bind(server_fd, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
+  // {
+  //     std::cerr << "Failed to bind to port 4221\n";
+  //     return 1;
+  // }
+  //
+  // constexpr int connection_backlog = 5;
+  // if (listen(server_fd, connection_backlog) != 0)
+  // {
+  //     std::cerr << "listen failed\n";
+  //     return 1;
+  // }
 
         // int client_fd = accept(server->server_fd, (sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
         // constexpr ssize_t BUFF_LENGTH = 2048;
@@ -126,9 +115,3 @@ int main(int argc, char** argv)
         // std::cout << "Client connected\n";
         // close(client_fd);
         // std::cout << "Client closed\n";
-    }
-
-    close(server->server_fd);
-
-    return 0;
-}
