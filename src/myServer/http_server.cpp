@@ -229,6 +229,9 @@ void Http_server::handle_client(int client_fd)
                         status = NOT_FOUND;
                     }
                 }
+            } else
+            {
+                status = NOT_FOUND;
             }
             http_response.set_protocol(http_request.get_protocol());
             http_response.set_status(std::forward<STATUS_CODE>(status));
