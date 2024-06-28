@@ -25,10 +25,12 @@ std::string get_line(const std::string& str, int& cur)
     return temp_str;
 }
 
-template<typename T>
-bool find_value(const std::vector<T>& vec,const T& value)
+bool find_value(const std::vector<std::string>& vec,const std::string& value)
 {
-    for(auto i : vec) if (i == value) return true;
+    for(const auto& i : vec)
+    {
+        if (i == value) return true;
+    }
     return false;
 }
 
@@ -200,6 +202,7 @@ void Http_server::handle_client(int client_fd)
                 http_response.set_body(std::forward<std::string>(endpoint2));
                 http_response.set_header("Content-Type","text/plain");
                 std::string str{"gzip"};
+
                 if (find_value(http_request.get_header("Accept-Encoding"),str))
                 {
                     http_response.set_header("Content-Encoding","gzip");

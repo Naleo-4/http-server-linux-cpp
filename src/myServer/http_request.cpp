@@ -64,12 +64,11 @@ void Http_request::parse_header(std::string&& request)
         if (!str.contains(',')) this->header[header.substr(0, temp)].push_back(str);
         else
         {
-            while (true)
+            while (cur != str.npos)
             {
                 cur = str.find(',');
-                if (cur == str.npos) break;
                 this->header[header.substr(0, temp)].push_back(str.substr(0, cur));
-                str.erase(0, cur + 1);
+                str.erase(0, cur + 2);
             }
         }
         header.erase(0, cur + 2);
