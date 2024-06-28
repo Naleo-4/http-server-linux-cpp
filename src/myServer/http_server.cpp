@@ -204,12 +204,16 @@ void Http_server::handle_client(int client_fd)
             if (has_echo)
             {
                 http_response.set_body(std::forward<std::string>(endpoint2));
-                http_response.set_header("text/plain");
+                http_response.set_header("Content-Type","text/plain");
+                if (http_request.get_header("Accept-Encoding") == "gzip")
+                {
+                    http_response.set_header("Content-Encoding","gzip");
+                }
             }
             else if (has_user_agent)
             {
                 http_response.set_body(http_request.get_header("User-Agent"));
-                http_response.set_header("text/plain");
+                http_response.set_header("Content-Type","text/plain");
             }
             else if (is_request_file)
             {
@@ -224,7 +228,7 @@ void Http_server::handle_client(int client_fd)
                     if (std::filesystem::exists(path + "/" + endpoint2))
                     {
                         http_response.set_body(std::forward<std::string>(get_file_content(path + "/" + endpoint2)));
-                        http_response.set_header("application/octet-stream");
+                        http_response.set_header("Content-Type","application/octet-stream");
                     }
                     else
                     {

@@ -25,15 +25,15 @@ void Http_response::set_protocol(std::string&& protocol)
     this->protocol = protocol;
 };
 
-void Http_response::set_header(std::string&& content_type = "text/plain")
+void Http_response::set_header(std::string&& key, std::string&& content_type)
 {
-    header["Content-Type"] = content_type;
-    header["Content-Length"] = std::to_string(body["body"].length());
+    header[key] = content_type;
 }
 
 void Http_response::set_body(const std::string&& body)
 {
     this->body["body"] = body;
+    header["Content-Length"] = std::to_string(this->body["body"].length());
 }
 
 std::ostream& operator<<(std::ostream& out, Http_response& response)

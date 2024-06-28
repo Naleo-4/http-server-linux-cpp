@@ -18,7 +18,7 @@ private:
 public:;
     friend std::ostream& operator<<(std::ostream& out, Http_response& request);
 public:
-    void set_header(std::string&&);
+    void set_header(std::string&&, std::string&&);
     void set_body(const std::string&&);
     void set_status(STATUS_CODE&&);
     void set_protocol(std::string&&);
