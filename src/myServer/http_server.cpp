@@ -6,10 +6,11 @@
 #include "http_request.h"
 #include "http_response.h"
 #include "status_code.h"
+
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <bits/fs_ops.h>
+#include <cstdlib>
+
 const Http_server* Http_server::instance = nullptr;
 Thread_pool Http_server::thread_pool(4);
 std::string Http_server::path;
@@ -199,14 +200,18 @@ void Http_server::handle_client(int client_fd)
         {
             if (has_echo)
             {
-                http_response.set_body(std::forward<std::string>(endpoint2));
                 http_response.set_header("Content-Type","text/plain");
                 std::string str{"gzip"};
 
                 if (find_value(http_request.get_header("Accept-Encoding"),str))
                 {
+                    const std::string temp = "echo -n " + endpoint2 + " | gzip > cmd.txt";
+                    const char* command = temp.c_str();
+                    system(command);
                     http_response.set_header("Content-Encoding","gzip");
+                    http_response.set_body(get_file_content("cmd.txt"));
                 }
+                else http_response.set_body(std::forward<std::string>(endpoint2));
             }
             else if (has_user_agent)
             {

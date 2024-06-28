@@ -10,4 +10,5 @@
 #curl -v http://localhost:4221
 #curl -v --header "User-Agent: foobar/1.2.3" http://localhost:4221/user-agent
 #curl -v http://localhost:4221/user-agent -H "User-Agent: banana/blueberry-strawberry"
-curl -v http://localhost:4221/echo/orange -H "Accept-Encoding: encoding-1, gzip, encoding-2"
+#curl -v http://localhost:4221/echo/orange -H "Accept-Encoding: encoding-1, gzip, encoding-2"
+curl -v -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc | hexdump -C
