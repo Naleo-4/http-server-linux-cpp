@@ -6,7 +6,8 @@
 #
 # DON'T EDIT THIS!
 set -e
-cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}"/scripts/buildsystems/vcpkg.cmake
+cmake -B build -S . _G Ninja .
+#-DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}"/scripts/buildsystems/vcpkg.cmake
 cmake --build ./build
 #cd build
 #ninja
