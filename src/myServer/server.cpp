@@ -1,4 +1,4 @@
-#include "server.h"
+#include "status_code.h"
 
 #include <cstring>
 
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
         if (!strcmp( argv[i], "--directory" ))
         {
             std::string path{argv[2]};
-            Http_server::set_path(path);
+            Http_server::set_path(std::forward<std::string>(path));
         }
     }
     const Http_server* server = Http_server::get_instance();

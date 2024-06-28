@@ -24,7 +24,7 @@ public:
     explicit Http_client(const Http_server* server);
     Http_client();
     void connect_to_server() const;
-    void send_message(const std::string& message) const;
+    void send_message(const std::string&& message) const;
     void receive_message() const;
 };
 

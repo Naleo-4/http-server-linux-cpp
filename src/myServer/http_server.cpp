@@ -3,7 +3,9 @@
 //
 #include "http_server.h"
 #include "http_client.h"
-#include "server.h"
+#include "http_request.h"
+#include "http_response.h"
+#include "status_code.h"
 #include <iostream>
 #include <fstream>
 #include <bits/fs_ops.h>
@@ -22,19 +24,19 @@ std::string get_line(const std::string& str, int& cur)
     return temp_str;
 }
 
-STATUS_CODE check_request_target(const std::string& str)
-{
-    int cur = str.find_first_of('/');
-    if (str[cur + 1] != ' ')
-    {
-        std::string temp{str.substr(cur + 1)};
-        int cur2 = temp.find_first_of(' ');
-        std::string end_point{temp.substr(0, cur2)};
-        // std::cout << end_point << "\n";
-        return NOT_FOUND;
-    }
-    return OK;
-}
+// STATUS_CODE check_request_target(const std::string& str)
+// {
+//     int cur = str.find_first_of('/');
+//     if (str[cur + 1] != ' ')
+//     {
+//         std::string temp{str.substr(cur + 1)};
+//         int cur2 = temp.find_first_of(' ');
+//         std::string end_point{temp.substr(0, cur2)};
+//         // std::cout << end_point << "\n";
+//         return NOT_FOUND;
+//     }
+//     return OK;
+// }
 
 std::string get_end_point(const std::string& str)
 {
@@ -84,14 +86,22 @@ std::string get_line_value(const std::string& str)
     return value;
 }
 
-void get_file_content(std::string& str,const std::string& path)
+std::string get_file_content(const std::string&& path)
 {
     std::ifstream ifs{path};
-    str.assign( (std::istreambuf_iterator<char>(ifs) ),
-                (std::istreambuf_iterator<char>()    ) );
+    std::string str;
+    str.assign((std::istreambuf_iterator<char>(ifs)),
+               (std::istreambuf_iterator<char>()));
+    return str;
 }
 
-void Http_server::set_path(std::string& path)
+void append_file_content(const std::string&& path, const std::string&& str)
+{
+    std::ofstream ofs{path, std::ios::app};
+    ofs << str << "\n";
+}
+
+void Http_server::set_path(std::string&& path)
 {
     Http_server::path = path;
 }
@@ -175,57 +185,55 @@ void Http_server::handle_client(int client_fd)
     if (bytesRead > 0)
     {
         std::string request(buff, bytesRead);
-        STATUS_CODE status{check_request_target(request)};
-        std::string method{get_method(request)};
-        std::string endpoint{get_end_point(request)};
-        std::string header{};
+        Http_request http_request;
+        http_request.parse_request(std::forward<std::string>(request));
+        STATUS_CODE status{OK};
+        Http_response http_response;
+        std::string method{http_request.get_method()};
+        std::string endpoint{http_request.get_endpoint().erase(0, 1)};
         std::string endpoint2{get_end_point(endpoint)};
-        std::string response_body{};
         bool is_request_file = endpoint.contains("files");
         bool has_echo = endpoint.contains("echo");
         bool has_user_agent = endpoint.contains("user-agent");
+
         if (endpoint.empty() || has_echo || has_user_agent || is_request_file)
         {
-            status = OK;
-            if (!endpoint.empty())
-            {
-                header = "Content-Type: text/plain\r\nContent-Length: ";
-            }
-            if(is_request_file)
-            {
-                if (std::filesystem::exists(path +"/"+ endpoint2))
-                {
-                    get_file_content(response_body, path + "/"+ endpoint2);
-                    header = "Content-Type: application/octet-stream\r\nContent-Length: " + std::to_string(response_body.length());
-                }
-                else
-                {
-                    status = NOT_FOUND;
-                }
-            }
             if (has_echo)
             {
-                response_body = endpoint2;
-                header += std::to_string(response_body.length());
+                http_response.set_body(std::forward<std::string>(endpoint2));
+                http_response.set_header("text/plain");
             }
-            if (has_user_agent)
+            else if (has_user_agent)
             {
-                std::string request_header = get_header(request);
-                std::string line = get_line_with_key(request_header, "User-Agent");
-                response_body = get_line_value(line);
-                header += std::to_string(response_body.length());
+                http_response.set_body(http_request.get_header("User-Agent"));
+                http_response.set_header("text/plain");
             }
-            header += "\r\n";
+            else if (is_request_file)
+            {
+                if (http_request.get_method() == "POST")
+                {
+                    append_file_content(std::forward<std::string>(path + "/" + endpoint2),
+                                        http_request.get_body("body"));
+                    status = CREATED;
+                }
+                else if (http_request.get_method() == "GET")
+                {
+                    if (std::filesystem::exists(path + "/" + endpoint2))
+                    {
+                        http_response.set_body(std::forward<std::string>(get_file_content(path + "/" + endpoint2)));
+                        http_response.set_header("application/octet-stream");
+                    }
+                    else
+                    {
+                        status = NOT_FOUND;
+                    }
+                }
+            }
+            http_response.set_protocol(http_request.get_protocol());
+            http_response.set_status(std::forward<STATUS_CODE>(status));
+            std::string rs{http_response.to_string()};
+            send(client_fd, rs.c_str(), rs.length(), 0);
         }
-        if (status == NOT_FOUND)
-        {
-            header.clear();
-        }
-        std::string response = "HTTP/1.1 " + std::to_string(status) + ' ' + format_status_string(
-            status_code_to_string(status)) + "\r\n" + header + "\r\n";
-        response += response_body;
-        std::cout << response;
-        send(client_fd, response.c_str(), response.length(), 0);
     }
     close(client_fd);
 };

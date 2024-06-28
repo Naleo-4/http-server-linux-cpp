@@ -77,6 +77,20 @@ build CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o: CXX_COMPILER__server
   OBJECT_DIR = CMakeFiles/server.dir
   OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
 
+build CMakeFiles/server.dir/src/myServer/http_request.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/http_request.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/http_request.cpp.o.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
+
+build CMakeFiles/server.dir/src/myServer/http_response.cpp.o: CXX_COMPILER__server_unscanned_Debug /home/kali/dev/repos/git/codecrafters-http-server-cpp/src/myServer/http_response.cpp || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/src/myServer/http_response.cpp.o.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -I/home/kali/dev/repos/git/codecrafters-http-server-cpp/include
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/src/myServer
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target server
@@ -85,7 +99,7 @@ build CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o: CXX_COMPILER__server
 #############################################
 # Link the executable server
 
-build server: CXX_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/src/myServer/server.cpp.o CMakeFiles/server.dir/src/myServer/http_server.cpp.o CMakeFiles/server.dir/src/myServer/http_client.cpp.o CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o
+build server: CXX_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/src/myServer/server.cpp.o CMakeFiles/server.dir/src/myServer/http_server.cpp.o CMakeFiles/server.dir/src/myServer/http_client.cpp.o CMakeFiles/server.dir/src/myServer/thread_pool.cpp.o CMakeFiles/server.dir/src/myServer/http_request.cpp.o CMakeFiles/server.dir/src/myServer/http_response.cpp.o
   FLAGS = -g
   LINK_PATH = -L/home/kali/dev/repos/git/codecrafters-http-server-cpp/include/lib
   OBJECT_DIR = CMakeFiles/server.dir

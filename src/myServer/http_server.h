@@ -125,7 +125,7 @@ private:
 public:
     static void accept_connection();
     static void handle_client(int client_socket);
-    static void set_path(std::string& path);
+    static void set_path(std::string&& path);
     static const Http_server* get_instance();
 };
 

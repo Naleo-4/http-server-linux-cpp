@@ -24,7 +24,7 @@ link_directories(${CMAKE_SOURCE_DIR}/include/lib)
 
 add_executable(server
 #        ${SOURCE_FILES}
-        src/myServer/server.h
+        src/myServer/status_code.h
         src/myServer/server.cpp
         src/myServer/http_server.cpp
         src/myServer/http_server.h
@@ -32,5 +32,9 @@ add_executable(server
         src/myServer/http_client.h
         src/myServer/thread_pool.cpp
         src/myServer/thread_pool.h
+        src/myServer/http_request.cpp
+        src/myServer/http_request.h
+        src/myServer/http_response.cpp
+        src/myServer/http_response.h
 )
 #target_link_libraries(server PRIVATE Threads::Threads)

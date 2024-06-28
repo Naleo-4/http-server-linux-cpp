@@ -33,7 +33,7 @@ void Http_client::connect_to_server() const
     std::cout << "Connected to server\n";
 }
 
-void Http_client::send_message(const std::string& message) const
+void Http_client::send_message(const std::string&& message) const
 {
     send(client_fd, message.c_str(), message.length(), 0);
 }
