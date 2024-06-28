@@ -98,7 +98,7 @@ std::string get_file_content(const std::string&& path)
 void append_file_content(const std::string&& path, const std::string&& str)
 {
     std::ofstream ofs{path, std::ios::app};
-    ofs << str << "\n";
+    ofs << str;
 }
 
 void Http_server::set_path(std::string&& path)
