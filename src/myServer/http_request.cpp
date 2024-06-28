@@ -52,12 +52,13 @@ std::string Http_request::get_request(std::string&& request)
 void Http_request::parse_header(std::string&& request)
 {
     size_t pos{request.find_first_of("\r\n")};
-    std::string header{request.substr(pos + 2, request.find_last_of("\r\n") - pos - 4)};
+    std::string header(request.substr(pos + 2, request.find_last_of("\r\n") - pos - 2));
     size_t cur{};
     size_t temp{};
-    while (cur != header.npos)
+    while (true)
     {
         cur = header.find("\r\n");
+        if (cur ==  header.npos) break;
         temp = header.find(':');
         this->header[header.substr(0, temp)] = header.substr(temp + 2, cur - temp - 2 );
         header.erase(0, cur+2);
