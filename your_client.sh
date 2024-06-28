@@ -6,6 +6,7 @@
 #curl -v http://localhost:4221/echo/pineapple
 #curl -v http://localhost:4221/files/temp
 #curl -v http://localhost:4221/
+curl -v http://localhost:4221/banana
 #curl -v http://localhost:4221
 #curl -v --header "User-Agent: foobar/1.2.3" http://localhost:4221/user-agent
-curl -v http://localhost:4221/user-agent -H "User-Agent: banana/blueberry-strawberry"
+#curl -v http://localhost:4221/user-agent -H "User-Agent: banana/blueberry-strawberry"

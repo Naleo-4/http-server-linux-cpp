@@ -55,7 +55,8 @@ std::string Http_response::to_string()
     {
         str += key.first + ": " + key.second + "\r\n";
     }
-    str += "\r\n" + body["body"];
+    str += "\r\n";
+    if (body.contains("body")) str +=body["body"];
     return str;
 }
 

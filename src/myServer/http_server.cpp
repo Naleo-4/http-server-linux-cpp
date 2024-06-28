@@ -188,11 +188,13 @@ void Http_server::handle_client(int client_fd)
         Http_request http_request;
         http_request.parse_request(std::forward<std::string>(request));
         // std::cout << http_request;
+
         STATUS_CODE status{OK};
         Http_response http_response;
         std::string method{http_request.get_method()};
         std::string endpoint{http_request.get_endpoint().erase(0, 1)};
         std::string endpoint2{get_end_point(endpoint)};
+
         bool is_request_file = endpoint.contains("files");
         bool has_echo = endpoint.contains("echo");
         bool has_user_agent = endpoint.contains("user-agent");
@@ -229,17 +231,18 @@ void Http_server::handle_client(int client_fd)
                         status = NOT_FOUND;
                     }
                 }
-            } else
-            {
-                if (endpoint != "/")
-                status = NOT_FOUND;
             }
-            http_response.set_protocol(http_request.get_protocol());
-            http_response.set_status(std::forward<STATUS_CODE>(status));
-            std::string rs{http_response.to_string()};
-            // std::cout<<rs;
-            send(client_fd, rs.c_str(), rs.length(), 0);
         }
+        else
+        {
+            status = NOT_FOUND;
+        }
+
+        http_response.set_protocol(http_request.get_protocol());
+        http_response.set_status(std::forward<STATUS_CODE>(status));
+        std::string rs{http_response.to_string()};
+        // std::cout<<rs;
+        send(client_fd, rs.c_str(), rs.length(), 0);
     }
     close(client_fd);
 };

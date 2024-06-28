@@ -11,10 +11,10 @@
 
 class Http_response {
 private:
-    STATUS_CODE status;
-    std::string protocol;
-    std::map<std::string,std::string> header;
-    std::map<std::string,std::string> body;
+    STATUS_CODE status{};
+    std::string protocol{};
+    std::map<std::string,std::string> header{};
+    std::map<std::string,std::string> body{};
 public:;
     friend std::ostream& operator<<(std::ostream& out, Http_response& request);
 public:
