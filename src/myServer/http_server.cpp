@@ -8,6 +8,7 @@
 #include "status_code.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <bits/fs_ops.h>
 const Http_server* Http_server::instance = nullptr;
 Thread_pool Http_server::thread_pool(4);
@@ -24,19 +25,12 @@ std::string get_line(const std::string& str, int& cur)
     return temp_str;
 }
 
-// STATUS_CODE check_request_target(const std::string& str)
-// {
-//     int cur = str.find_first_of('/');
-//     if (str[cur + 1] != ' ')
-//     {
-//         std::string temp{str.substr(cur + 1)};
-//         int cur2 = temp.find_first_of(' ');
-//         std::string end_point{temp.substr(0, cur2)};
-//         // std::cout << end_point << "\n";
-//         return NOT_FOUND;
-//     }
-//     return OK;
-// }
+template<typename T>
+bool find_value(const std::vector<T>& vec,const T& value)
+{
+    for(auto i : vec) if (i == value) return true;
+    return false;
+}
 
 std::string get_end_point(const std::string& str)
 {
@@ -205,14 +199,15 @@ void Http_server::handle_client(int client_fd)
             {
                 http_response.set_body(std::forward<std::string>(endpoint2));
                 http_response.set_header("Content-Type","text/plain");
-                if (http_request.get_header("Accept-Encoding") == "gzip")
+                std::string str{"gzip"};
+                if (find_value(http_request.get_header("Accept-Encoding"),str))
                 {
                     http_response.set_header("Content-Encoding","gzip");
                 }
             }
             else if (has_user_agent)
             {
-                http_response.set_body(http_request.get_header("User-Agent"));
+                http_response.set_body(static_cast<std::string>(http_request.get_header("User-Agent")[0]));
                 http_response.set_header("Content-Type","text/plain");
             }
             else if (is_request_file)

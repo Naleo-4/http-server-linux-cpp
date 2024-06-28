@@ -58,16 +58,27 @@ void Http_request::parse_header(std::string&& request)
     while (true)
     {
         cur = header.find("\r\n");
-        if (cur ==  header.npos) break;
+        if (cur == header.npos) break;
         temp = header.find(':');
-        this->header[header.substr(0, temp)] = header.substr(temp + 2, cur - temp - 2 );
-        header.erase(0, cur+2);
+        std::string str = header.substr(temp + 2, cur - temp - 2);
+        if (!str.contains(',')) this->header[header.substr(0, temp)].push_back(str);
+        else
+        {
+            while (true)
+            {
+                cur = str.find(',');
+                if (cur == str.npos) break;
+                this->header[header.substr(0, temp)].push_back(str.substr(0, cur));
+                str.erase(0, cur + 1);
+            }
+        }
+        header.erase(0, cur + 2);
     }
 }
 
-const std::string&& Http_request::get_header(std::string&& key)
+const std::vector<std::string>&& Http_request::get_header(std::string&& key)
 {
-    return std::forward<std::string>(header[key]);
+    return std::forward<std::vector<std::string>>(header[key]);
 }
 
 void Http_request::parse_body(std::string&& request)
@@ -87,8 +98,12 @@ std::ostream& operator<<(std::ostream& out, Http_request& request)
     out << request.get_method() << " " << request.get_endpoint() << " " << request.get_protocol() << "\r\n";
     for (auto key : request.header)
     {
-        out << key.first << ": " << key.second << "\r\n";
+        out << key.first << ": ";
+        if (key.second.size() > 1) for (long i =0; i < key.second.size() - 1; ++i) out << key.second[i] << ",";
+        out << key.second.back() << "\r\n";
     }
     out << "\r\n" << request.body["body"];
     return out;
 }
+
+

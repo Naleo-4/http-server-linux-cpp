@@ -5,6 +5,7 @@
 #ifndef HTTP_REQUEST_H
 #define HTTP_REQUEST_H
 #include <map>
+#include <vector>
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -14,13 +15,12 @@ private:
     std::string method;
     std::string endpoint;
     std::string protocol;
-    std::map<std::string,std::string> header;
+    std::map<std::string,std::vector<std::string>> header;
     std::map<std::string,std::string> body;
 public:
     std::string get_request(std::string&&);
     void parse_request(std::string&&);
     friend std::ostream& operator<<(std::ostream& out, Http_request& request);
-
 
 private:
     void parse_header(std::string&&);
@@ -31,7 +31,7 @@ private:
     void set_protocol(std::string&&);
 
 public:
-    [[nodiscard]] const std::string&& get_header(std::string&&);
+    [[nodiscard]] const std::vector<std::string>&& get_header(std::string&&);
     [[nodiscard]] const std::string&& get_body(std::string&&);
     [[nodiscard]] std::string get_method() const;
     [[nodiscard]] std::string get_endpoint() const;
