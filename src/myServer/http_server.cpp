@@ -231,6 +231,7 @@ void Http_server::handle_client(int client_fd)
                 }
             } else
             {
+                if (endpoint != "/")
                 status = NOT_FOUND;
             }
             http_response.set_protocol(http_request.get_protocol());
